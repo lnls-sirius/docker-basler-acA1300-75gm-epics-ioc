@@ -13,9 +13,9 @@ RUN git clone https://github.com/lnls-dig/aravis.git /opt/aravis && \
     ./autogen.sh && \
     make distclean
 
-RUN git clone https://github.com/areaDetector/aravisGigE /opt/epics/aravisGigE && \
+RUN git clone https://github.com/lnls-dig/aravisGigE /opt/epics/aravisGigE && \
     cd /opt/epics/aravisGigE && \
-    git checkout R2-1 && \
+    git checkout 3f17142763df1880ba2af11f6406df43dfb9f4dc && \
     echo 'EPICS_BASE=/opt/epics/base' > configure/RELEASE.local && \
     echo 'SUPPORT=/opt/epics/synApps_5_8/support' >> configure/RELEASE.local && \
     echo 'AREADETECTOR=$(SUPPORT)/areaDetector-R2-0' >> configure/RELEASE.local && \
@@ -24,6 +24,5 @@ RUN git clone https://github.com/areaDetector/aravisGigE /opt/epics/aravisGigE &
     echo 'GLIBPREFIX=/usr' >> configure/RELEASE.local && \
     echo 'GLIB_INC1=/usr/lib/x86_64-linux-gnu/glib-2.0/include' >> configure/RELEASE.local && \
     echo 'GLIB_INC2=/usr/lib/x86_64-linux-gnu/glib-2.0/include' >> configure/RELEASE.local && \
-    sed -i -e 's/^USR_LIBS += glib-2.0$/USR_SYS_LIBS += glib-2.0/' aravisGigEApp/src/Makefile && \
     ln -s /opt/aravis vendor && \
     make
