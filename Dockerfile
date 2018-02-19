@@ -5,7 +5,8 @@ RUN apt-get update && \
         intltool \
         libgirepository1.0-dev \
         gtk-doc-tools \
-        libglib2.0-dev
+        libglib2.0-dev \
+        libglibmm-2.4-dev
 
 RUN git clone https://github.com/lnls-dig/aravis.git /opt/aravis && \
     cd /opt/aravis && \
@@ -25,4 +26,19 @@ RUN git clone https://github.com/lnls-dig/aravisGigE /opt/epics/aravisGigE && \
     echo 'GLIB_INC1=/usr/lib/x86_64-linux-gnu/glib-2.0/include' >> configure/RELEASE.local && \
     echo 'GLIB_INC2=/usr/lib/x86_64-linux-gnu/glib-2.0/include' >> configure/RELEASE.local && \
     ln -s /opt/aravis vendor && \
+    make
+
+RUN cd /opt/epics/aravisGigE/iocs/aravisGigEIOC && \
+    echo '-include $(ARAVISGIGE)/configure/RELEASE.local' > configure/RELEASE.local && \
+    echo >> configure/RELEASE.local && \
+    echo 'CALC=$(SUPPORT)/calc-3-4-2-1' >> configure/RELEASE.local && \
+    echo 'BUSY=$(SUPPORT)/busy-1-6-1' >> configure/RELEASE.local && \
+    echo 'SSCAN=$(SUPPORT)/sscan-2-10-1' >> configure/RELEASE.local && \
+    echo 'AUTOSAVE=$(SUPPORT)/autosave-5-6-1' >> configure/RELEASE.local && \
+    echo >> configure/RELEASE.local && \
+    echo 'HDF5_LIB     = /usr/lib/x86_64-linux-gnu/hdf5/serial' >> configure/RELEASE.local && \
+    echo 'HDF5_INCLUDE = -I/usr/include/hdf5/serial' >> configure/RELEASE.local && \
+    echo >> configure/RELEASE.local && \
+    echo 'SZIP_LIB       = /usr/lib' >> configure/RELEASE.local && \
+    echo 'SZIP_INCLUDE   =' >> configure/RELEASE.local && \
     make
