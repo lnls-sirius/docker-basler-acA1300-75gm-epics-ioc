@@ -1,34 +1,12 @@
-FROM lnls/epics-dist:debian-9.2
+FROM lnlsdig/aravisgige-epics-module:debian-9.2
 
-RUN apt-get update && \
-    apt-get install -y \
-        intltool \
-        libgirepository1.0-dev \
-        gtk-doc-tools \
-        libglib2.0-dev \
-        libglibmm-2.4-dev
+ENV IOC_REPO docker-basler-acA1300-75gm-epics-ioc
+ENV BOOT_DIR iocBasleracA130075gm
+ENV COMMIT 0.1.0
 
-RUN git clone https://github.com/lnls-dig/aravis.git /opt/aravis && \
-    cd /opt/aravis && \
-    git checkout bd182447a5dbc2041a9572a347de12ed95ce15e5 && \
-    ./autogen.sh && \
-    make distclean
-
-RUN git clone https://github.com/lnls-dig/aravisGigE /opt/epics/aravisGigE && \
-    cd /opt/epics/aravisGigE && \
-    git checkout 3f17142763df1880ba2af11f6406df43dfb9f4dc && \
-    echo 'EPICS_BASE=/opt/epics/base' > configure/RELEASE.local && \
-    echo 'SUPPORT=/opt/epics/synApps_5_8/support' >> configure/RELEASE.local && \
-    echo 'AREADETECTOR=$(SUPPORT)/areaDetector-R2-0' >> configure/RELEASE.local && \
-    echo 'ADCORE=$(AREADETECTOR)/ADCore-R2-2' >> configure/RELEASE.local && \
-    echo 'ASYN=$(SUPPORT)/asyn-4-26' >> configure/RELEASE.local && \
-    echo 'GLIBPREFIX=/usr' >> configure/RELEASE.local && \
-    echo 'GLIB_INC1=/usr/lib/x86_64-linux-gnu/glib-2.0/include' >> configure/RELEASE.local && \
-    echo 'GLIB_INC2=/usr/lib/x86_64-linux-gnu/glib-2.0/include' >> configure/RELEASE.local && \
-    ln -s /opt/aravis vendor && \
-    make
-
-RUN cd /opt/epics/aravisGigE/iocs/aravisGigEIOC && \
+RUN git clone https://github.com/lnls-dig/${IOC_REPO}.git /opt/epics/${IOC_REPO} && \
+    cd /opt/epics/${IOC_REPO} && \
+    git checkout ${COMMIT} && \
     echo '-include $(ARAVISGIGE)/configure/RELEASE.local' > configure/RELEASE.local && \
     echo >> configure/RELEASE.local && \
     echo 'CALC=$(SUPPORT)/calc-3-4-2-1' >> configure/RELEASE.local && \
@@ -41,4 +19,14 @@ RUN cd /opt/epics/aravisGigE/iocs/aravisGigEIOC && \
     echo >> configure/RELEASE.local && \
     echo 'SZIP_LIB       = /usr/lib' >> configure/RELEASE.local && \
     echo 'SZIP_INCLUDE   =' >> configure/RELEASE.local && \
-    make
+    make && \
+    make install && \
+    make clean
+
+# Source environment variables until we figure it out
+# where to put system-wide env-vars on docker-debian
+RUN . /root/.bashrc
+
+WORKDIR /opt/epics/startup/ioc/${IOC_REPO}/iocBoot/${BOOT_DIR}
+
+ENTRYPOINT ["./runProcServ.sh"]
