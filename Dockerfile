@@ -1,6 +1,6 @@
 FROM lnlsdig/aravisgige-epics-module:debian-9.2
 
-ENV IOC_REPO docker-basler-acA1300-75gm-epics-ioc
+ENV IOC_REPO basler-acA1300-75gm-epics-ioc
 ENV BOOT_DIR iocBasleracA130075gm
 ENV COMMIT 0.1.0
 
