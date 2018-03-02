@@ -2,7 +2,7 @@ FROM lnlsdig/aravisgige-epics-module:debian-9.2
 
 ENV IOC_REPO basler-acA1300-75gm-epics-ioc
 ENV BOOT_DIR iocBasleracA130075gm
-ENV COMMIT v0.1.1
+ENV COMMIT v0.2.0
 
 RUN git clone https://github.com/lnls-dig/${IOC_REPO}.git /opt/epics/${IOC_REPO} && \
     cd /opt/epics/${IOC_REPO} && \
