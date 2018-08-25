@@ -1,4 +1,4 @@
-FROM lnlsdig/aravisgige-epics-module:R2-1-LNLS1-base-3.15-debian-9
+FROM lnlsdig/aravisgige-epics-module:R2-1-LNLS2-base-3.15-debian-9
 
 ENV IOC_REPO basler-acA1300-75gm-epics-ioc
 ENV BOOT_DIR iocBasleracA130075gm
