@@ -2,7 +2,7 @@ FROM lnlsdig/aravisgige-epics-module:R2-1-LNLS2-base-3.15-debian-9
 
 ENV IOC_REPO basler-acA1300-75gm-epics-ioc
 ENV BOOT_DIR iocBasleracA130075gm
-ENV COMMIT v2.0.0
+ENV COMMIT v3.0.0
 
 ENV NDPLUGIN_DIMFEI_COMMIT v0.2.0
 
