@@ -2,9 +2,23 @@ FROM lnlsdig/aravisgige-epics-module:R2-1-LNLS2-base-3.15-debian-9
 
 ENV IOC_REPO basler-acA1300-75gm-epics-ioc
 ENV BOOT_DIR iocBasleracA130075gm
-ENV COMMIT v3.3.0
+ENV COMMIT v3.4.0-rc1-ffmpeg
 
 ENV NDPLUGIN_DIMFEI_COMMIT v0.2.0
+
+ENV FFMPEG_COMMIT 0f8341cb27ed97551b7cdbdd996a8b831251afaf
+
+# Install ffmpeg and build ffmpegServer
+RUN apt-get update && \ 
+    apt-get install -y unzip
+
+RUN git clone https://github.com/areaDetector/ffmpegServer.git /opt/epics/ffmpegServer && \
+    cd /opt/epics/ffmpegServer && \
+    git checkout ${FFMPEG_COMMIT} && \
+    ./install.sh && \
+    echo 'ARAVISGIGE=/opt/epics/aravisGigE' > configure/RELEASE.local && \
+    echo '-include $(ARAVISGIGE)/configure/RELEASE.local' >> configure/RELEASE.local && \
+    make
 
 # Install NDPluginDimFei
 RUN sudo apt-get update && \
@@ -30,6 +44,8 @@ RUN git clone https://github.com/lnls-dig/${IOC_REPO}.git /opt/epics/${IOC_REPO}
     git checkout ${COMMIT} && \
     echo 'ARAVISGIGE=/opt/epics/aravisGigE' > configure/RELEASE.local && \
     echo '-include $(ARAVISGIGE)/configure/RELEASE.local' >> configure/RELEASE.local && \
+    echo >> configure/RELEASE.local && \
+    echo 'FFMPEGSERVER=/opt/epics/ffmpegServer' >> configure/RELEASE.local && \
     echo >> configure/RELEASE.local && \
     echo 'DIMFEI=/opt/epics/NDPluginDimFei' >> configure/RELEASE.local && \
     echo >> configure/RELEASE.local && \
