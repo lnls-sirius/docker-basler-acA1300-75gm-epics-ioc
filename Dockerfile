@@ -2,7 +2,6 @@ FROM lnlsdig/aravisgige-epics-module:R2-1-LNLS2-base-3.15-debian-9
 
 ARG IOC_GROUP
 ARG IOC_REPO
-ARG COMMIT
 
 ENV BOOT_DIR iocBasleracA130075gm
 
