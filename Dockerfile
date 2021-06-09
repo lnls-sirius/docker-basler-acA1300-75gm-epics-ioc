@@ -1,15 +1,23 @@
 FROM lnlsdig/aravisgige-epics-module:R2-1-LNLS2-base-3.15-debian-9
 
-ENV IOC_REPO basler-acA1300-75gm-epics-ioc
+ARG IOC_GROUP
+ARG IOC_REPO
+ARG COMMIT
+
 ENV BOOT_DIR iocBasleracA130075gm
-ENV COMMIT v3.4.0-rc4
 
 ENV NDPLUGIN_DIMFEI_COMMIT v0.2.0
 
 ENV FFMPEG_COMMIT 0f8341cb27ed97551b7cdbdd996a8b831251afaf
 
+ARG APT_PROXY_SERVER=TA-TiRack-CO-FWSrv-1.abtlus.org.br:3142
+RUN echo \
+        "Acquire::http { Proxy \"http://${APT_PROXY_SERVER}\"; }" > /etc/apt/apt.conf.d/proxy ;\
+    apt-get update && \
+    apt-get install -y socat
+
 # Install ffmpeg and build ffmpegServer
-RUN apt-get update && \ 
+RUN apt-get update && \
     apt-get install -y unzip
 
 RUN git clone https://github.com/areaDetector/ffmpegServer.git /opt/epics/ffmpegServer && \
@@ -39,7 +47,7 @@ RUN git clone https://github.com/lnls-dig/NDPluginDimFei.git /opt/epics/NDPlugin
     make install
 
 # Install basler-acA1300-75gm epics ioc
-RUN git clone https://github.com/lnls-dig/${IOC_REPO}.git /opt/epics/${IOC_REPO} && \
+RUN git clone https://github.com/${IOC_REPO}/${IOC_REPO}.git /opt/epics/${IOC_REPO} && \
     cd /opt/epics/${IOC_REPO} && \
     git checkout ${COMMIT} && \
     echo 'ARAVISGIGE=/opt/epics/aravisGigE' > configure/RELEASE.local && \
