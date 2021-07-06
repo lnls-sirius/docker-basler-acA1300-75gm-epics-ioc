@@ -2,7 +2,7 @@ FROM lnlsdig/aravisgige-epics-module:R2-1-LNLS2-base-3.15-debian-9
 
 ARG IOC_GROUP
 ARG IOC_REPO
-ARG COMMIT
+ARG IOC_COMMIT
 
 ENV BOOT_DIR iocBasleracA130075gm
 ENV NDPLUGIN_DIMFEI_COMMIT v0.2.0
@@ -53,7 +53,7 @@ RUN set -x; \
 # Install basler-acA1300-75gm epics ioc
 RUN git clone https://github.com/${IOC_GROUP}/${IOC_REPO}.git /opt/epics/${IOC_REPO} && \
     cd /opt/epics/${IOC_REPO} && \
-    git checkout ${COMMIT} && \
+    git checkout ${IOC_COMMIT} && \
     echo 'ARAVISGIGE=/opt/epics/aravisGigE' > configure/RELEASE.local && \
     echo '-include $(ARAVISGIGE)/configure/RELEASE.local' >> configure/RELEASE.local && \
     echo >> configure/RELEASE.local && \
