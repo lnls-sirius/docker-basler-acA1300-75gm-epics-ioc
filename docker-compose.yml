@@ -1,5 +1,6 @@
 version: "3.8"
 services:
+
   ioc:
     image: dockerregistry.lnls-sirius.com.br/gas/basler-aca1300-75gm-epics-ioc:${IOC_COMMIT}-base-3.15-debian-9
     build:
@@ -12,3 +13,9 @@ services:
         IOC_GROUP: ${IOC_GROUP}
         IOC_REPO: ${IOC_REPO}
         IOC_COMMIT: ${IOC_COMMIT}
+
+  fallback:
+    image: dockerregistry.lnls-sirius.com.br/gas/basler-aca1300-75gm-epics-ioc:3.2.0-socat-rc1-base-3.15-debian-9
+    build:
+      context: .
+      dockerfile: Dockerfile.fallback
